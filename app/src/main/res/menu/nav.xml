@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/chatFragment"
+        android:id="@+id/messagesFragment"
         android:icon="@drawable/chat"
         android:title="Messages"
         app:showAsAction="always"/>
