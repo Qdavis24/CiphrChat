@@ -5,29 +5,20 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".ui_layer.main.MainActivity">
+    tools:context=".ui_layer.auth.AuthActivity">
 
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/mainActivity_fragmentContainerView_navHost"
+        android:id="@+id/authActivity_fragmentContainerView_navHost"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:defaultNavHost="true"
-        app:navGraph="@navigation/main_nav_graph"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/mainActivity_bottomNav"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"  />
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/mainActivity_bottomNav"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        app:navGraph="@navigation/auth_nav_graph"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:menu="@menu/nav" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

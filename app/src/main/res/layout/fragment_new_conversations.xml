@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".friends.FriendsFragment">
+    tools:context=".ui_layer.main.new_chat.NewConversationFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fragmentFriends_recyclerView_friends"
