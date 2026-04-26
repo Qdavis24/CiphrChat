@@ -1,6 +1,5 @@
 package com.example.ciphrchat.data_layer.repositories
 
-import android.app.Application
 import com.example.ciphrchat.data_layer.models.Session
 
 object SessionRepository {
