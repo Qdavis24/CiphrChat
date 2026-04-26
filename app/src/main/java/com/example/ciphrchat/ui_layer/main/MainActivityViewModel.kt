@@ -103,6 +103,8 @@ class MainActivityViewModel : ViewModel(), SocketService.SocketListener {
     }
 
     override fun onContactRequestReceived(fromUsername: String, fromPubKey: String) {
+        val previousReq = contactRequestManager.get(fromUsername)
+        if (previousReq != null) return
         contactRequestManager.add(fromUsername, fromPubKey)
     }
 
