@@ -3,10 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui_layer.main.new_chat.NewConversationFragment">
+    tools:context=".ui_layer.main.contact_request.ContactRequestsFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/fragmentFriends_recyclerView_friends"
+        android:id="@+id/fragmentContactRequests_recyclerView_contactRequests"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
 </FrameLayout>

@@ -3,11 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui_layer.main.notifications.NotificationsFragment">
+    tools:context=".ui_layer.main.online_users.OnlineUsersFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/fragmentNotifications_recyclerView_notifications"
+        android:id="@+id/addContactFragment_recyclerView_onlineUsers"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
 </FrameLayout>

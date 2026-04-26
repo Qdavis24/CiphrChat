@@ -3,21 +3,34 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_nav_graph"
-    app:startDestination="@id/messagesFragment">
+    app:startDestination="@id/contactsFragment">
 
     <fragment
-        android:id="@+id/messagesFragment"
-        android:name="com.example.ciphrchat.ui_layer.main.conversations.ConversationsFragment"
+        android:id="@+id/contactsFragment"
+        android:name="com.example.ciphrchat.ui_layer.main.contacts.ContactsFragment"
         android:label="fragment_chat"
-        tools:layout="@layout/fragment_conversations" />
+        tools:layout="@layout/fragment_contacts">
+        <action
+            android:id="@+id/action_contactsFragment_to_conversationFragment"
+            app:destination="@id/conversationFragment" />
+    </fragment>
     <fragment
-        android:id="@+id/friendsFragment"
-        android:name="com.example.ciphrchat.ui_layer.main.new_chat.NewConversationFragment"
+        android:id="@+id/conversationFragment"
+        android:name="com.example.ciphrchat.ui_layer.main.conversation.ConversationFragment"
+        android:label="fragment_conversation"
+        tools:layout="@layout/fragment_conversation">
+        <argument
+            android:name="peerUsername"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/onlineUsersFragment"
+        android:name="com.example.ciphrchat.ui_layer.main.online_users.OnlineUsersFragment"
         android:label="fragment_friends"
-        tools:layout="@layout/fragment_new_conversations" />
+        tools:layout="@layout/fragment_online_users" />
     <fragment
-        android:id="@+id/notificationsFragment"
-        android:name="com.example.ciphrchat.ui_layer.main.notifications.NotificationsFragment"
+        android:id="@+id/contactRequestsFragment"
+        android:name="com.example.ciphrchat.ui_layer.main.contact_request.ContactRequestsFragment"
         android:label="fragment_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_contact_requests" />
 </navigation>

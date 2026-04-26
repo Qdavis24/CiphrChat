@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteConstraintException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
-import com.example.ciphrchat.data_layer.models.Conversation
+import com.example.ciphrchat.data_layer.models.Contact
 import com.example.ciphrchat.data_layer.models.Message
 import com.example.ciphrchat.data_layer.models.User
 
@@ -21,20 +21,18 @@ class LocalDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME,
         db?.execSQL(
             """
             CREATE TABLE user (
-                _id          INTEGER PRIMARY KEY AUTOINCREMENT,
-                username     TEXT NOT NULL UNIQUE,
-                pub_key      TEXT NOT NULL,
-                private_key  TEXT NOT NULL
+                username    TEXT PRIMARY KEY,
+                pub_key     TEXT NOT NULL,
+                private_key TEXT NOT NULL
             )
         """.trimIndent()
         )
 
         db?.execSQL(
             """
-            CREATE TABLE conversations (
-                convo_id        INTEGER PRIMARY KEY AUTOINCREMENT,
-                peer_username   TEXT NOT NULL UNIQUE,
-                peer_pub_key    TEXT NOT NULL
+            CREATE TABLE contacts (
+                username TEXT PRIMARY KEY,
+                pub_key  TEXT NOT NULL
             )
         """.trimIndent()
         )
@@ -42,26 +40,26 @@ class LocalDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME,
         db?.execSQL(
             """
             CREATE TABLE messages (
-                message_id      INTEGER PRIMARY KEY AUTOINCREMENT,
                 content         TEXT NOT NULL,
                 sender_username TEXT NOT NULL,
-                sent_at         INTEGER NOT NULL,
-                conversation_id INTEGER NOT NULL REFERENCES conversations(convo_id)
+                peer_username   TEXT NOT NULL,
+                sent_at         INTEGER NOT NULL
             )
         """.trimIndent()
         )
+
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         db?.execSQL("DROP TABLE IF EXISTS messages")
-        db?.execSQL("DROP TABLE IF EXISTS conversations")
+        db?.execSQL("DROP TABLE IF EXISTS contacts")
         db?.execSQL("DROP TABLE IF EXISTS user")
         onCreate(db)
     }
 
     // --- user ---
 
-    suspend fun insertUser(username: String, pubKey: String, privateKey: String): Boolean {
+    fun insertUser(username: String, pubKey: String, privateKey: String): Boolean {
         return try {
             val cv = ContentValues().apply {
                 put("username", username)
@@ -76,10 +74,8 @@ class LocalDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME,
         }
     }
 
-
-    suspend fun getUser(): User? {
+    fun getUser(): User? {
         val cursor = readableDatabase.query("user", null, null, null, null, null, null, "1")
-
         return cursor.use {
             if (it.moveToFirst()) {
                 User(
@@ -91,32 +87,31 @@ class LocalDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME,
         }
     }
 
-    // --- conversations ---
+    // --- contacts ---
 
-    suspend fun insertConversation(peerUsername: String, peerPubKey: String): Boolean {
+    fun insertContact(username: String, pubKey: String): Boolean {
         return try {
             val cv = ContentValues().apply {
-                put("peer_username", peerUsername)
-                put("peer_pub_key", peerPubKey)
+                put("username", username)
+                put("pub_key", pubKey)
             }
-            writableDatabase.insert("conversations", null, cv)
+            writableDatabase.insert("contacts", null, cv)
             true
         } catch (e: SQLiteConstraintException) {
-            Log.d("ERROR", "LocalDatabaseHelper::insertConversation ${e.message}")
+            Log.d("ERROR", "LocalDatabaseHelper::insertContact ${e.message}")
             false
         }
     }
 
-    suspend fun getConversations(): List<Conversation> {
-        val cursor = readableDatabase.query("conversations", null, null, null, null, null, null)
+    fun getContacts(): List<Contact> {
+        val cursor = readableDatabase.query("contacts", null, null, null, null, null, null)
         return cursor.use {
-            val results =  ArrayList<Conversation>()
+            val results = ArrayList<Contact>()
             while (it.moveToNext()) {
                 results.add(
-                    Conversation(
-                        convoId = it.getInt(it.getColumnIndexOrThrow("convo_id")),
-                        peerUsername = it.getString(it.getColumnIndexOrThrow("peer_username")),
-                        peerPubKey = it.getString(it.getColumnIndexOrThrow("peer_pub_key"))
+                    Contact(
+                        username = it.getString(it.getColumnIndexOrThrow("username")),
+                        pubKey = it.getString(it.getColumnIndexOrThrow("pub_key"))
                     )
                 )
             }
@@ -124,16 +119,35 @@ class LocalDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME,
         }
     }
 
+    fun getContactByUsername(username: String): Contact? {
+        val cursor = readableDatabase.query(
+            "contacts", null,
+            "username = ?", arrayOf(username),
+            null, null, null, "1"
+        )
+        return cursor.use {
+            if (it.moveToFirst()) {
+                Contact(
+                    username = it.getString(it.getColumnIndexOrThrow("username")),
+                    pubKey = it.getString(it.getColumnIndexOrThrow("pub_key"))
+                )
+            } else null
+        }
+    }
+
     // --- messages ---
 
-    suspend fun insertMessage(
-        conversationId: Int, content: String, senderUsername: String, sentAt: Long
+    fun insertMessage(
+        content: String,
+        senderUsername: String,
+        peerUsername: String,
+        sentAt: Long
     ): Boolean {
         return try {
             val cv = ContentValues().apply {
-                put("conversation_id", conversationId)
                 put("content", content)
                 put("sender_username", senderUsername)
+                put("peer_username", peerUsername)
                 put("sent_at", sentAt)
             }
             writableDatabase.insert("messages", null, cv)
@@ -144,25 +158,20 @@ class LocalDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME,
         }
     }
 
-    suspend fun getMessagesByConversationId(conversationId: Int): List<Message> {
+    fun getMessagesByPeerUsername(peerUsername: String): List<Message> {
         val cursor = readableDatabase.query(
-            "messages",
-            null,
-            "conversation_id = ?",
-            arrayOf(conversationId.toString()),
-            null,
-            null,
-            "sent_at ASC"
+            "messages", null,
+            "peer_username = ?", arrayOf(peerUsername),
+            null, null, "sent_at ASC"
         )
         return cursor.use {
             val results = ArrayList<Message>()
             while (it.moveToNext()) {
                 results.add(
                     Message(
-                        messageId = it.getInt(it.getColumnIndexOrThrow("message_id")),
-                        conversationId = it.getInt(it.getColumnIndexOrThrow("conversation_id")),
                         content = it.getString(it.getColumnIndexOrThrow("content")),
                         senderUsername = it.getString(it.getColumnIndexOrThrow("sender_username")),
+                        peerUsername = it.getString(it.getColumnIndexOrThrow("peer_username")),
                         sentAt = it.getLong(it.getColumnIndexOrThrow("sent_at"))
                     )
                 )

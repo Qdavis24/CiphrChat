@@ -13,11 +13,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.ciphrchat.R
-import com.example.ciphrchat.data_layer.repositories.UserRepository
 import com.example.ciphrchat.ui_layer.main.MainActivity
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class LoginFragment : Fragment() {
     private lateinit var tvUsername: TextView
@@ -40,7 +37,7 @@ class LoginFragment : Fragment() {
         btnSubmit = view.findViewById(R.id.loginFragment_button_submit)
 
         lifecycleScope.launch {
-            val username = withContext(Dispatchers.IO) { viewModel.getUsername() }
+            val username = viewModel.getUsername()
             tvUsername.text = username
         }
 
@@ -55,7 +52,7 @@ class LoginFragment : Fragment() {
         val username = tvUsername.text.toString()
         val password = etPassword.text.toString()
         lifecycleScope.launch {
-            val result = withContext(Dispatchers.IO) { viewModel.login(username, password) }
+            val result = viewModel.login(username, password)
             when (result) {
                 LoginFragmentViewModel.AuthResult.SUCCESS -> startMainActivity()
                 LoginFragmentViewModel.AuthResult.INVALID_CREDENTIALS -> showToast("Invalid credentials")

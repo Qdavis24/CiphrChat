@@ -3,10 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui_layer.main.conversations.ConversationsFragment">
+    tools:context=".ui_layer.main.contacts.ContactsFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/fragmentChat_recyclerView_chats"
+        android:id="@+id/fragmentContacts_recyclerView_contacts"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </FrameLayout>

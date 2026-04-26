@@ -13,9 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.ciphrchat.R
 import com.example.ciphrchat.ui_layer.main.MainActivity
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class RegisterFragment : Fragment() {
     private lateinit var etUsername: EditText
@@ -48,7 +46,7 @@ class RegisterFragment : Fragment() {
         val username = etUsername.text.toString().trim()
         val password = etPassword.text.toString().trim()
         lifecycleScope.launch {
-            val result = withContext(Dispatchers.IO) { viewModel.register(username, password) }
+            val result = viewModel.register(username, password)
             when (result) {
                 RegisterFragmentViewModel.RegisterResult.SUCCESS -> startMainActivity()
                 RegisterFragmentViewModel.RegisterResult.USERNAME_TAKEN -> showToast("Username already taken")

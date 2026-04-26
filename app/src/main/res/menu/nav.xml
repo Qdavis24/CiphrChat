@@ -3,19 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/messagesFragment"
-        android:icon="@drawable/chat"
-        android:title="Messages"
-        app:showAsAction="always"/>
-
-    <item
-        android:id="@+id/friendsFragment"
+        android:id="@+id/contactsFragment"
         android:icon="@drawable/group"
-        android:title="Friends"
+        android:title="Contacts"
         app:showAsAction="always"/>
 
     <item
-        android:id="@+id/notificationsFragment"
+        android:id="@+id/onlineUsersFragment"
+        android:icon="@drawable/find_person"
+        android:title="Online Users"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/contactRequestsFragment"
         android:icon="@drawable/notification_icon"
         android:title="Notifications"
         app:showAsAction="always"/>

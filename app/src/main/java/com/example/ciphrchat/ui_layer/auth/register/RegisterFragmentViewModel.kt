@@ -5,10 +5,8 @@ import com.example.ciphrchat.data_layer.models.Session
 import com.example.ciphrchat.data_layer.repositories.SessionRepository
 import com.example.ciphrchat.data_layer.repositories.UserRepository
 import com.example.ciphrchat.services.AuthApiService
-import java.security.KeyPair
-import java.security.KeyPairGenerator
+import com.example.ciphrchat.utils.CryptoUtils
 
-// RegisterFragmentViewModel.kt
 class RegisterFragmentViewModel : ViewModel() {
 
     enum class RegisterResult {
@@ -19,31 +17,23 @@ class RegisterFragmentViewModel : ViewModel() {
     }
 
     suspend fun register(username: String, password: String): RegisterResult {
-        val response =
-            AuthApiService.register(username, password) ?: return RegisterResult.SERVER_ERROR
-
+        val response = AuthApiService.register(username, password) ?: return RegisterResult.SERVER_ERROR
         if (response.token == null) return RegisterResult.USERNAME_TAKEN
 
-        val keyPair = generateKeyPair()
+        val (pubKeyBase64, privKeyBase64) = CryptoUtils.generateKeyPair()
 
-        val saved = UserRepository.saveUser(username, keyPair.public.toString(), keyPair.private.toString())
+        val saved = UserRepository.saveUser(username, pubKeyBase64, privKeyBase64)
         if (!saved) return RegisterResult.LOCAL_ERROR
 
         SessionRepository.load(
             Session(
                 username = username,
                 jwt = response.token,
-                publicKey = keyPair.public.toString(),
-                privateKey = keyPair.private.toString()
+                publicKey = pubKeyBase64,
+                privateKey = privKeyBase64
             )
         )
 
         return RegisterResult.SUCCESS
-    }
-
-    private fun generateKeyPair(): KeyPair {
-        val keyGen = KeyPairGenerator.getInstance("RSA")
-        keyGen.initialize(2048)
-        return keyGen.generateKeyPair()
     }
 }
