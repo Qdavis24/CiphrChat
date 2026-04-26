@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 import com.example.ciphrchat.data_layer.models.Conversation
 import com.example.ciphrchat.data_layer.models.Message
 import com.example.ciphrchat.data_layer.models.User
@@ -70,6 +71,7 @@ class LocalDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME,
             writableDatabase.insert("user", null, cv)
             true
         } catch (e: SQLiteConstraintException) {
+            Log.d("ERROR", "LocalDatabaseHelper::insertUser ${e.message}")
             false
         }
     }
@@ -100,6 +102,7 @@ class LocalDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME,
             writableDatabase.insert("conversations", null, cv)
             true
         } catch (e: SQLiteConstraintException) {
+            Log.d("ERROR", "LocalDatabaseHelper::insertConversation ${e.message}")
             false
         }
     }
@@ -136,6 +139,7 @@ class LocalDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME,
             writableDatabase.insert("messages", null, cv)
             true
         } catch (e: SQLiteConstraintException) {
+            Log.d("ERROR", "LocalDatabaseHelper::insertMessage ${e.message}")
             false
         }
     }
