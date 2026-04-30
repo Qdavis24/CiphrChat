@@ -6,16 +6,15 @@ import com.example.ciphrchat.data_layer.repositories.SessionRepository
 import com.example.ciphrchat.data_layer.repositories.UserRepository
 import com.example.ciphrchat.services.AuthApiService
 
-class LoginFragmentViewModel: ViewModel() {
+class LoginFragmentViewModel : ViewModel() {
     enum class AuthResult {
-        SUCCESS,
-        INVALID_CREDENTIALS,
-        SERVER_ERROR,
-        LOCAL_ERROR
+        SUCCESS, INVALID_CREDENTIALS, SERVER_ERROR, LOCAL_ERROR
     }
+
     suspend fun getUsername(): String? {
         return UserRepository.getUser()?.username
     }
+
     suspend fun login(username: String, password: String): AuthResult {
         val response = AuthApiService.login(username, password) ?: return AuthResult.SERVER_ERROR
         val token = response.token ?: return AuthResult.INVALID_CREDENTIALS

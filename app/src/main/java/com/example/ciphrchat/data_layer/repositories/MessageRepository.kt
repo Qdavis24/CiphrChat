@@ -13,10 +13,10 @@ object MessageRepository {
     suspend fun saveMessage(
         content: String,
         senderUsername: String,
-        peerUsername: String,
+        contactUsername: String,
         sentAt: Long
-    ): Boolean = withContext(Dispatchers.IO) { db.insertMessage(content, senderUsername, peerUsername, sentAt) }
+    ): Boolean = withContext(Dispatchers.IO) { db.insertMessage(content, senderUsername, contactUsername, sentAt) }
 
-    suspend fun getMessagesByPeerUsername(peerUsername: String): List<Message> =
-        withContext(Dispatchers.IO) { db.getMessagesByPeerUsername(peerUsername) }
+    suspend fun getMessagesByContactUsername(contactUsername: String): List<Message> =
+        withContext(Dispatchers.IO) { db.getMessagesByContactUsername(contactUsername) }
 }

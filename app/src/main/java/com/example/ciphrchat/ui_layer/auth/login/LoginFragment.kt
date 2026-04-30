@@ -63,7 +63,8 @@ class LoginFragment : Fragment() {
     }
 
     private fun validateInput(): Boolean {
-        return etPassword.text.toString().trim().isNotEmpty() && tvUsername.text.toString().trim().isNotEmpty()
+        return etPassword.text.toString().trim().isNotEmpty() && tvUsername.text.toString().trim()
+            .isNotEmpty()
     }
 
     private fun showToast(message: String) {

@@ -21,8 +21,8 @@ class LocalDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME,
         db?.execSQL(
             """
             CREATE TABLE user (
-                username    TEXT PRIMARY KEY,
-                pub_key     TEXT NOT NULL,
+                username TEXT PRIMARY KEY,
+                pub_key TEXT NOT NULL,
                 private_key TEXT NOT NULL
             )
         """.trimIndent()
@@ -30,20 +30,21 @@ class LocalDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME,
 
         db?.execSQL(
             """
-            CREATE TABLE contacts (
+            CREATE TABLE contact (
                 username TEXT PRIMARY KEY,
-                pub_key  TEXT NOT NULL
+                pub_key TEXT NOT NULL
             )
         """.trimIndent()
         )
 
         db?.execSQL(
             """
-            CREATE TABLE messages (
-                content         TEXT NOT NULL,
+            CREATE TABLE message (
+                _id INTEGER PRIMARY KEY AUTOINCREMENT,
+                content TEXT NOT NULL,
                 sender_username TEXT NOT NULL,
-                peer_username   TEXT NOT NULL,
-                sent_at         INTEGER NOT NULL
+                sent_at INTEGER NOT NULL,
+                contact_username TEXT NOT NULL REFERENCES contact(username)
             )
         """.trimIndent()
         )
@@ -51,8 +52,8 @@ class LocalDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME,
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        db?.execSQL("DROP TABLE IF EXISTS messages")
-        db?.execSQL("DROP TABLE IF EXISTS contacts")
+        db?.execSQL("DROP TABLE IF EXISTS message")
+        db?.execSQL("DROP TABLE IF EXISTS contact")
         db?.execSQL("DROP TABLE IF EXISTS user")
         onCreate(db)
     }
@@ -95,7 +96,7 @@ class LocalDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME,
                 put("username", username)
                 put("pub_key", pubKey)
             }
-            writableDatabase.insert("contacts", null, cv)
+            writableDatabase.insert("contact", null, cv)
             true
         } catch (e: SQLiteConstraintException) {
             Log.d("ERROR", "LocalDatabaseHelper::insertContact ${e.message}")
@@ -104,7 +105,7 @@ class LocalDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME,
     }
 
     fun getContacts(): List<Contact> {
-        val cursor = readableDatabase.query("contacts", null, null, null, null, null, null)
+        val cursor = readableDatabase.query("contact", null, null, null, null, null, null)
         return cursor.use {
             val results = ArrayList<Contact>()
             while (it.moveToNext()) {
@@ -121,7 +122,7 @@ class LocalDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME,
 
     fun getContactByUsername(username: String): Contact? {
         val cursor = readableDatabase.query(
-            "contacts", null,
+            "contact", null,
             "username = ?", arrayOf(username),
             null, null, null, "1"
         )
@@ -140,17 +141,17 @@ class LocalDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME,
     fun insertMessage(
         content: String,
         senderUsername: String,
-        peerUsername: String,
+        contactUsername: String,
         sentAt: Long
     ): Boolean {
         return try {
             val cv = ContentValues().apply {
                 put("content", content)
                 put("sender_username", senderUsername)
-                put("peer_username", peerUsername)
+                put("contact_username", contactUsername)
                 put("sent_at", sentAt)
             }
-            writableDatabase.insert("messages", null, cv)
+            writableDatabase.insert("message", null, cv)
             true
         } catch (e: SQLiteConstraintException) {
             Log.d("ERROR", "LocalDatabaseHelper::insertMessage ${e.message}")
@@ -158,10 +159,10 @@ class LocalDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME,
         }
     }
 
-    fun getMessagesByPeerUsername(peerUsername: String): List<Message> {
+    fun getMessagesByContactUsername(contactUsername: String): List<Message> {
         val cursor = readableDatabase.query(
-            "messages", null,
-            "peer_username = ?", arrayOf(peerUsername),
+            "message", null,
+            "contact_username = ?", arrayOf(contactUsername),
             null, null, "sent_at ASC"
         )
         return cursor.use {
@@ -171,7 +172,7 @@ class LocalDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME,
                     Message(
                         content = it.getString(it.getColumnIndexOrThrow("content")),
                         senderUsername = it.getString(it.getColumnIndexOrThrow("sender_username")),
-                        peerUsername = it.getString(it.getColumnIndexOrThrow("peer_username")),
+                        contactUsername = it.getString(it.getColumnIndexOrThrow("contact_username")),
                         sentAt = it.getLong(it.getColumnIndexOrThrow("sent_at"))
                     )
                 )

@@ -15,7 +15,7 @@ class ConversationManager {
     suspend fun load() {
         val loaded = mutableMapOf<String, List<Message>>()
         for (contact in ContactRepository.getContacts()) {
-            loaded[contact.username] = MessageRepository.getMessagesByPeerUsername(contact.username)
+            loaded[contact.username] = MessageRepository.getMessagesByContactUsername(contact.username)
         }
         messages.value = loaded
     }
@@ -24,14 +24,14 @@ class ConversationManager {
         outgoingMessages[timestamp] = Message(
             content = content,
             senderUsername = SessionRepository.session.username,
-            peerUsername = toUsername,
+            contactUsername = toUsername,
             sentAt = timestamp
         )
     }
 
     suspend fun flushOutgoing(timestamp: Long) {
         val msg = outgoingMessages[timestamp] ?: return
-        MessageRepository.saveMessage(msg.content, msg.senderUsername, msg.peerUsername, msg.sentAt)
+        MessageRepository.saveMessage(msg.content, msg.senderUsername, msg.contactUsername, msg.sentAt)
         load()
     }
 
@@ -43,7 +43,7 @@ class ConversationManager {
         MessageRepository.saveMessage(
             content = content,
             senderUsername = senderUsername,
-            peerUsername = senderUsername,
+            contactUsername = senderUsername,
             sentAt = System.currentTimeMillis()
         )
         load()
