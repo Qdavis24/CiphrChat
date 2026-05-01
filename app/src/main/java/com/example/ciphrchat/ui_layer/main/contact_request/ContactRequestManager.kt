@@ -14,6 +14,7 @@ class ContactRequestManager {
         unreadCount.value = unreadCount.value!! + 1
     }
 
+
     fun remove(request: ContactRequest) {
         val current = contactRequests.value!!.toMutableList()
         current.removeAll { it.fromUsername == request.fromUsername }

@@ -76,7 +76,9 @@ class LocalDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME,
     }
 
     fun getUser(): User? {
-        val cursor = readableDatabase.query("user", null, null, null, null, null, null, "1")
+        val cursor = readableDatabase.query(
+            "user", null, null, null, null, null, null, "1"
+        )
         return cursor.use {
             if (it.moveToFirst()) {
                 User(
@@ -105,7 +107,9 @@ class LocalDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME,
     }
 
     fun getContacts(): List<Contact> {
-        val cursor = readableDatabase.query("contact", null, null, null, null, null, null)
+        val cursor = readableDatabase.query(
+            "contact", null, null, null, null, null, null
+        )
         return cursor.use {
             val results = ArrayList<Contact>()
             while (it.moveToNext()) {
@@ -122,9 +126,7 @@ class LocalDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME,
 
     fun getContactByUsername(username: String): Contact? {
         val cursor = readableDatabase.query(
-            "contact", null,
-            "username = ?", arrayOf(username),
-            null, null, null, "1"
+            "contact", null, "username = ?", arrayOf(username), null, null, null, "1"
         )
         return cursor.use {
             if (it.moveToFirst()) {
@@ -139,10 +141,7 @@ class LocalDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME,
     // --- messages ---
 
     fun insertMessage(
-        content: String,
-        senderUsername: String,
-        contactUsername: String,
-        sentAt: Long
+        content: String, senderUsername: String, contactUsername: String, sentAt: Long
     ): Boolean {
         return try {
             val cv = ContentValues().apply {
@@ -161,9 +160,13 @@ class LocalDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME,
 
     fun getMessagesByContactUsername(contactUsername: String): List<Message> {
         val cursor = readableDatabase.query(
-            "message", null,
-            "contact_username = ?", arrayOf(contactUsername),
-            null, null, "sent_at ASC"
+            "message",
+            null,
+            "contact_username = ?",
+            arrayOf(contactUsername),
+            null,
+            null,
+            "sent_at ASC"
         )
         return cursor.use {
             val results = ArrayList<Message>()

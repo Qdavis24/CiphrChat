@@ -30,7 +30,8 @@ class MessageAdapter : RecyclerView.Adapter<MessageAdapter.ViewHolder>() {
             tvInitials.text = message.senderUsername.first().uppercaseChar().toString()
             tvUsername.text = message.senderUsername
             tvContent.text = message.content
-            tvTimestamp.text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date(message.sentAt))
+            tvTimestamp.text =
+                SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date(message.sentAt))
         }
     }
 

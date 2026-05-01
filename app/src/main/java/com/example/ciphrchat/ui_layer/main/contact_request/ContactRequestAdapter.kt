@@ -9,7 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.ciphrchat.R
 import com.example.ciphrchat.data_layer.models.ContactRequest
 
-class ContactRequestAdapter(val listener: ContactsRequestListener) : RecyclerView.Adapter<ContactRequestAdapter.ViewHolder>() {
+class ContactRequestAdapter(val listener: ContactsRequestListener) :
+    RecyclerView.Adapter<ContactRequestAdapter.ViewHolder>() {
 
     interface ContactsRequestListener {
         fun onContactAccepted(contact: ContactRequest)
@@ -17,9 +18,12 @@ class ContactRequestAdapter(val listener: ContactsRequestListener) : RecyclerVie
     }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val tvUsername: TextView = view.findViewById(R.id.contactRequestItem_textView_username)
-        private val btnContactAccept: ImageButton = view.findViewById(R.id.contactRequestItem_button_accept)
-        private val btnContactDeclined: ImageButton = view.findViewById(R.id.contactRequestItem_button_decline)
+        private val tvUsername: TextView =
+            view.findViewById(R.id.contactRequestItem_textView_username)
+        private val btnContactAccept: ImageButton =
+            view.findViewById(R.id.contactRequestItem_button_accept)
+        private val btnContactDeclined: ImageButton =
+            view.findViewById(R.id.contactRequestItem_button_decline)
 
         fun update(contactReq: ContactRequest) {
             tvUsername.text = contactReq.fromUsername
@@ -36,8 +40,7 @@ class ContactRequestAdapter(val listener: ContactsRequestListener) : RecyclerVie
     }
 
     override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
+        parent: ViewGroup, viewType: Int
     ): ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_contact_request, parent, false)
@@ -45,8 +48,7 @@ class ContactRequestAdapter(val listener: ContactsRequestListener) : RecyclerVie
     }
 
     override fun onBindViewHolder(
-        holder: ViewHolder,
-        position: Int
+        holder: ViewHolder, position: Int
     ) {
         holder.update(contactReqs[position])
     }

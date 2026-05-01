@@ -19,8 +19,7 @@ class OnlineUsersFragment : Fragment(), OnlineUsersAdapter.OnlineUsersListener {
     private lateinit var adapter: OnlineUsersAdapter
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         return inflater.inflate(R.layout.fragment_online_users, container, false)
     }
@@ -31,12 +30,16 @@ class OnlineUsersFragment : Fragment(), OnlineUsersAdapter.OnlineUsersListener {
         adapter = OnlineUsersAdapter(this)
 
 
-        val recyclerView = view.findViewById<RecyclerView>(R.id.addContactFragment_recyclerView_onlineUsers)
+        val recyclerView =
+            view.findViewById<RecyclerView>(R.id.addContactFragment_recyclerView_onlineUsers)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
 
         viewModel.onlineUsersManager.usersOnline.observe(viewLifecycleOwner) { users ->
-            Log.d("USERS_ONLINE", "fragment received ${users.size} users: ${users.map { it.username }}")
+            Log.d(
+                "USERS_ONLINE",
+                "fragment received ${users.size} users: ${users.map { it.username }}"
+            )
             adapter.submitList(users)
         }
 

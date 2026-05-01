@@ -20,8 +20,7 @@ class ConversationFragment : Fragment() {
     private lateinit var peerUsername: String
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         return inflater.inflate(R.layout.fragment_conversation, container, false)
     }
@@ -33,7 +32,8 @@ class ConversationFragment : Fragment() {
 
         adapter = MessageAdapter()
 
-        val recyclerView = view.findViewById<RecyclerView>(R.id.conversationFragment_recyclerView_messages)
+        val recyclerView =
+            view.findViewById<RecyclerView>(R.id.conversationFragment_recyclerView_messages)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
 

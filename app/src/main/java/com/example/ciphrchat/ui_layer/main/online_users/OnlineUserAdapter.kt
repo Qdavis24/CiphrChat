@@ -9,7 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.ciphrchat.R
 import com.example.ciphrchat.data_layer.models.OnlineUser
 
-class OnlineUsersAdapter(val listener: OnlineUsersListener) : RecyclerView.Adapter<OnlineUsersAdapter.ViewHolder>() {
+class OnlineUsersAdapter(val listener: OnlineUsersListener) :
+    RecyclerView.Adapter<OnlineUsersAdapter.ViewHolder>() {
     interface OnlineUsersListener {
         fun onAddContactClicked(user: OnlineUser)
     }
@@ -32,17 +33,15 @@ class OnlineUsersAdapter(val listener: OnlineUsersListener) : RecyclerView.Adapt
     }
 
     override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
+        parent: ViewGroup, viewType: Int
     ): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_online_user, parent, false)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.item_online_user, parent, false)
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(
-        holder: ViewHolder,
-        position: Int
+        holder: ViewHolder, position: Int
     ) {
         holder.update(users[position])
     }

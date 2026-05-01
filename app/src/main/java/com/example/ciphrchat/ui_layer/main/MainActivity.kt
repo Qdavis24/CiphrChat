@@ -38,16 +38,15 @@ class MainActivity : AppCompatActivity() {
         bottomNav.setupWithNavController(navController)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            bottomNav.visibility = if (destination.id == R.id.conversationFragment) View.GONE else View.VISIBLE
+            bottomNav.visibility =
+                if (destination.id == R.id.conversationFragment) View.GONE else View.VISIBLE
         }
 
         observeViewModel(bottomNav, navHost, spinner)
     }
 
     private fun observeViewModel(
-        bottomNav: BottomNavigationView,
-        navHost: FragmentContainerView,
-        spinner: ProgressBar
+        bottomNav: BottomNavigationView, navHost: FragmentContainerView, spinner: ProgressBar
     ) {
         viewModel.isConnected.observe(this) { connected ->
             if (connected) {

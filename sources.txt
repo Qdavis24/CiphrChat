@@ -1,0 +1,30 @@
+View Models:
+https://www.youtube.com/watch?v=orH4K6qBzvE
+https://developer.android.com/reference/androidx/lifecycle/AndroidViewModel
+https://developer.android.com/topic/libraries/architecture/viewmodel
+
+Live Data (observables):
+https://developer.android.com/topic/libraries/architecture/livedata
+
+Application start up initialization:
+https://developer.android.com/reference/android/app/Application
+
+Nav Graph / Navigation:
+https://developer.android.com/guide/navigation/design
+
+Crypto:
+https://www.baeldung.com/java-base64-encode-and-decode # base 64 for transit over the internet / storage
+https://developer.android.com/reference/java/security/KeyFactory # key factory can take a byte array of a key and wrap in a key spec
+https://www.baeldung.com/java-rsa #comprehensive guide on assymetric crypto using java libs and RSA algorithm
+
+Accessing main thread outside activity:
+https://stackoverflow.com/questions/11123621/running-code-in-main-thread-from-another-thread
+
+Post Requests:
+https://developer.android.com/reference/java/net/HttpURLConnection
+https://developer.android.com/reference/kotlin/java/io/OutputStream
+
+Socket Io:
+https://socket.io/blog/native-socket-io-and-android/
+https://medium.com/@thushenarriyam/socket-io-connection-on-android-kotlin-to-node-js-server-71b218c160c9
+https://socketio.github.io/socket.io-client-java/emitting_events.html#Acknowledgements

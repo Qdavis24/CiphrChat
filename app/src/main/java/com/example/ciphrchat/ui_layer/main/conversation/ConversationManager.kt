@@ -9,13 +9,14 @@ import com.example.ciphrchat.data_layer.repositories.SessionRepository
 class ConversationManager {
     val messages = MutableLiveData<Map<String, List<Message>>>(emptyMap())
 
-    val outgoingMessages = mutableMapOf<Long, Message>()
+    val outgoingMessages = hashMapOf<Long, Message>()
 
 
     suspend fun load() {
-        val loaded = mutableMapOf<String, List<Message>>()
+        val loaded = hashMapOf<String, List<Message>>()
         for (contact in ContactRepository.getContacts()) {
-            loaded[contact.username] = MessageRepository.getMessagesByContactUsername(contact.username)
+            loaded[contact.username] =
+                MessageRepository.getMessagesByContactUsername(contact.username)
         }
         messages.value = loaded
     }
@@ -31,7 +32,9 @@ class ConversationManager {
 
     suspend fun flushOutgoing(timestamp: Long) {
         val msg = outgoingMessages[timestamp] ?: return
-        MessageRepository.saveMessage(msg.content, msg.senderUsername, msg.contactUsername, msg.sentAt)
+        MessageRepository.saveMessage(
+            msg.content, msg.senderUsername, msg.contactUsername, msg.sentAt
+        )
         load()
     }
 

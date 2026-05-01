@@ -18,8 +18,7 @@ class ContactsFragment : Fragment(), ContactsAdapter.ContactsListener {
     private lateinit var adapter: ContactsAdapter
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         return inflater.inflate(R.layout.fragment_contacts, container, false)
     }
@@ -29,7 +28,8 @@ class ContactsFragment : Fragment(), ContactsAdapter.ContactsListener {
 
         adapter = ContactsAdapter(this)
 
-        val recyclerView = view.findViewById<RecyclerView>(R.id.fragmentContacts_recyclerView_contacts)
+        val recyclerView =
+            view.findViewById<RecyclerView>(R.id.fragmentContacts_recyclerView_contacts)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
 
@@ -41,7 +41,6 @@ class ContactsFragment : Fragment(), ContactsAdapter.ContactsListener {
     override fun onContactClicked(contact: Contact) {
         findNavController().navigate(
             R.id.action_contactsFragment_to_conversationFragment,
-            Bundle().apply { putString("peerUsername", contact.username) }
-        )
+            Bundle().apply { putString("peerUsername", contact.username) })
     }
 }

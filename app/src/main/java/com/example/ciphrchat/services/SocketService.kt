@@ -68,7 +68,11 @@ class SocketService(private val listener: SocketListener) {
             if (response.getString("status") == "ok") {
                 mainHandler.post { listener.onContactRequestSuccess(toUsername) }
             } else {
-                mainHandler.post { listener.onChatRequestFailure(toUsername, response.optString("reason")) }
+                mainHandler.post {
+                    listener.onChatRequestFailure(
+                        toUsername, response.optString("reason")
+                    )
+                }
             }
         })
     }
@@ -83,7 +87,11 @@ class SocketService(private val listener: SocketListener) {
             if (response.getString("status") == "ok") {
                 mainHandler.post { listener.onContactAcceptSuccess(toUsername) }
             } else {
-                mainHandler.post { listener.onChatAcceptFailure(toUsername, response.optString("reason")) }
+                mainHandler.post {
+                    listener.onChatAcceptFailure(
+                        toUsername, response.optString("reason")
+                    )
+                }
             }
         })
     }
@@ -98,7 +106,11 @@ class SocketService(private val listener: SocketListener) {
             if (response.getString("status") == "ok") {
                 mainHandler.post { listener.onMessageSuccess(timestamp, toUsername, content) }
             } else {
-                mainHandler.post { listener.onMessageFailure(timestamp, toUsername, response.optString("reason"))}
+                mainHandler.post {
+                    listener.onMessageFailure(
+                        timestamp, toUsername, response.optString("reason")
+                    )
+                }
             }
         })
     }
@@ -123,8 +135,7 @@ class SocketService(private val listener: SocketListener) {
             val data = args[0] as JSONObject
             mainHandler.post {
                 listener.onMessageReceived(
-                    data.getString("from_username"),
-                    data.getString("content")
+                    data.getString("from_username"), data.getString("content")
                 )
             }
         }

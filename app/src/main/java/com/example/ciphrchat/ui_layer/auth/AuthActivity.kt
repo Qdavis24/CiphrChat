@@ -41,7 +41,7 @@ class AuthActivity : AppCompatActivity() {
 
     }
 
-    fun decideCorrectStartFrag(user: User?): Int{
+    fun decideCorrectStartFrag(user: User?): Int {
         if (user == null) {
             return R.id.registerFragment
         } else {

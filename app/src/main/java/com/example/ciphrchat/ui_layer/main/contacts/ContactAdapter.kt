@@ -8,7 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.ciphrchat.R
 import com.example.ciphrchat.data_layer.models.Contact
 
-class ContactsAdapter(val listener: ContactsListener) : RecyclerView.Adapter<ContactsAdapter.ViewHolder>() {
+class ContactsAdapter(val listener: ContactsListener) :
+    RecyclerView.Adapter<ContactsAdapter.ViewHolder>() {
 
     interface ContactsListener {
         fun onContactClicked(contact: Contact)
@@ -31,17 +32,14 @@ class ContactsAdapter(val listener: ContactsListener) : RecyclerView.Adapter<Con
     }
 
     override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
+        parent: ViewGroup, viewType: Int
     ): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_contact, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_contact, parent, false)
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(
-        holder: ViewHolder,
-        position: Int
+        holder: ViewHolder, position: Int
     ) {
         holder.update(contacts[position])
     }

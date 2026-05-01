@@ -13,15 +13,13 @@ import com.example.ciphrchat.data_layer.models.ContactRequest
 import com.example.ciphrchat.ui_layer.main.MainActivityViewModel
 
 
-
 class ContactRequestsFragment : Fragment(), ContactRequestAdapter.ContactsRequestListener {
 
     private val viewModel: MainActivityViewModel by activityViewModels()
     private lateinit var adapter: ContactRequestAdapter
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         return inflater.inflate(R.layout.fragment_contact_requests, container, false)
     }
@@ -31,7 +29,8 @@ class ContactRequestsFragment : Fragment(), ContactRequestAdapter.ContactsReques
 
         adapter = ContactRequestAdapter(this)
 
-        val recyclerView = view.findViewById<RecyclerView>(R.id.fragmentContactRequests_recyclerView_contactRequests)
+        val recyclerView =
+            view.findViewById<RecyclerView>(R.id.fragmentContactRequests_recyclerView_contactRequests)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
 
@@ -50,6 +49,6 @@ class ContactRequestsFragment : Fragment(), ContactRequestAdapter.ContactsReques
     }
 
     override fun onContactDeclined(contact: ContactRequest) {
-         viewModel.contactRequestManager.remove(contact)
+        viewModel.contactRequestManager.remove(contact)
     }
 }
