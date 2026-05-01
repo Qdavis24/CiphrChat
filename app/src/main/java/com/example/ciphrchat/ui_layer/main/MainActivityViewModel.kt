@@ -49,12 +49,12 @@ class MainActivityViewModel : ViewModel(), SocketService.SocketListener {
     fun sendContactRequest(toUsername: String) {
         viewModelScope.launch {
             if (ContactRepository.getContactByUsername(toUsername) != null) error.postValue("$toUsername is already added as a contact")
-            else socketService.sendChatRequest(toUsername, SessionRepository.session.publicKey)
+            else socketService.sendContactRequest(toUsername, SessionRepository.session.publicKey)
         }
     }
 
     fun sendContactAccept(toUsername: String) {
-        socketService.sendChatAccept(toUsername, SessionRepository.session.publicKey)
+        socketService.sendContactAccept(toUsername, SessionRepository.session.publicKey)
     }
 
     fun sendMessage(toUsername: String, content: String) {

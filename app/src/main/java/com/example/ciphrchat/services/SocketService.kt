@@ -58,7 +58,7 @@ class SocketService(private val listener: SocketListener) {
         socket.emit("announce_online")
     }
 
-    fun sendChatRequest(toUsername: String, fromPubKey: String) {
+    fun sendContactRequest(toUsername: String, fromPubKey: String) {
         val data = JSONObject().apply {
             put("to_username", toUsername)
             put("from_pubkey", fromPubKey)
@@ -73,7 +73,7 @@ class SocketService(private val listener: SocketListener) {
         })
     }
 
-    fun sendChatAccept(toUsername: String, fromPubKey: String) {
+    fun sendContactAccept(toUsername: String, fromPubKey: String) {
         val data = JSONObject().apply {
             put("to_username", toUsername)
             put("from_pubkey", fromPubKey)
