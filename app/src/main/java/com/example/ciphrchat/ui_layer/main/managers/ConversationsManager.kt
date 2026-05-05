@@ -6,8 +6,7 @@ import com.example.ciphrchat.data_layer.models.Message
 import com.example.ciphrchat.data_layer.repositories.ContactRepository
 import com.example.ciphrchat.data_layer.repositories.MessageRepository
 import com.example.ciphrchat.data_layer.repositories.SessionRepository
-import kotlinx.coroutines.withContext
-import kotlin.collections.forEach
+
 
 class ConversationsManager {
     val conversations = MutableLiveData<List<Conversation>>(emptyList())
@@ -44,6 +43,7 @@ class ConversationsManager {
         MessageRepository.saveMessage(
             msg.content, msg.senderUsername, msg.contactUsername, msg.sentAt, true
         )
+        outgoingMessages.remove(timestamp)
         load()
     }
 

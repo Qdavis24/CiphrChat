@@ -31,8 +31,7 @@ class AuthActivity : AppCompatActivity() {
         val navController = navHost.navController
 
         lifecycleScope.launch {
-            var user: User? = null
-            user = UserRepository.getUser()
+            val user = UserRepository.getUser()
             navController.navigate(decideCorrectStartFrag(user))
         }
 

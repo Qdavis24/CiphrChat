@@ -50,7 +50,9 @@ class ConversationFragment : Fragment() {
             adapter.submitList(
                 conversations.find { it.contact.username == peerUsername }?.messages ?: emptyList()
             )
-            recyclerView.scrollToPosition(adapter.itemCount - 1)
+            if (adapter.itemCount > 0){
+                recyclerView.scrollToPosition(adapter.itemCount - 1)
+            }
         }
     }
 

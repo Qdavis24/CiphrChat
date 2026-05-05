@@ -36,10 +36,6 @@ class OnlineUsersFragment : Fragment(), OnlineUsersAdapter.OnlineUsersListener {
         recyclerView.adapter = adapter
 
         viewModel.onlineUsersManager.usersOnline.observe(viewLifecycleOwner) { users ->
-            Log.d(
-                "USERS_ONLINE",
-                "fragment received ${users.size} users: ${users.map { it.username }}"
-            )
             adapter.submitList(users)
         }
 

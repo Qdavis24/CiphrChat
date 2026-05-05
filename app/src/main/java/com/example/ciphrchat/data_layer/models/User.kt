@@ -1,6 +1,6 @@
 package com.example.ciphrchat.data_layer.models
 
-data class User(
+class User(
     val username: String,
     val publicKey: String,
     val privateKey: String
