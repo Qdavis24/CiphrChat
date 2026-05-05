@@ -6,17 +6,17 @@
         android:id="@+id/conversationsFragment"
         android:icon="@drawable/group"
         android:title="@string/conversations"
-        app:showAsAction="ifRoom|always"/>
+        app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/onlineUsersFragment"
         android:icon="@drawable/find_person"
         android:title="@string/online_users"
-        app:showAsAction="ifRoom|always"/>
+        app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/contactRequestsFragment"
         android:icon="@drawable/notification_icon"
         android:title="@string/notifications"
-        app:showAsAction="ifRoom|always"/>
+        app:showAsAction="ifRoom"/>
 </menu>
