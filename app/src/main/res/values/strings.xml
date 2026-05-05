@@ -8,4 +8,9 @@
     <string name="register">Register</string>
     <string name="login">Login</string>
     <string name="welcome_back">Welcome Back</string>
+    <string name="send">Send</string>
+    <string name="conversations">Conversations</string>
+    <string name="online_users">Online Users</string>
+    <string name="notifications">Notifications</string>
+    <string name="message">Message</string>
 </resources>

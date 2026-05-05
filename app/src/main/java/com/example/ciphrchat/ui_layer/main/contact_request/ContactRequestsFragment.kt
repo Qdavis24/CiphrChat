@@ -39,11 +39,6 @@ class ContactRequestsFragment : Fragment(), ContactRequestAdapter.ContactsReques
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.onContactRequestsViewed()
-    }
-
     override fun onContactAccepted(contact: ContactRequest) {
         viewModel.sendContactAccept(contact.fromUsername)
     }

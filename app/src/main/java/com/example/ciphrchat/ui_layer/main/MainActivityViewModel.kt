@@ -8,10 +8,10 @@ import com.example.ciphrchat.data_layer.repositories.ContactRepository
 import com.example.ciphrchat.data_layer.repositories.SessionRepository
 import com.example.ciphrchat.services.AuthApiService
 import com.example.ciphrchat.services.SocketService
-import com.example.ciphrchat.ui_layer.main.online_users.OnlineUsersManager
-import com.example.ciphrchat.ui_layer.main.contact_request.ContactRequestManager
-import com.example.ciphrchat.ui_layer.main.contacts.ContactsManager
-import com.example.ciphrchat.ui_layer.main.conversation.ConversationManager
+import com.example.ciphrchat.ui_layer.main.managers.OnlineUsersManager
+import com.example.ciphrchat.ui_layer.main.managers.ContactRequestManager
+import com.example.ciphrchat.ui_layer.main.managers.ContactsManager
+import com.example.ciphrchat.ui_layer.main.managers.ConversationsManager
 import com.example.ciphrchat.utils.CryptoUtils
 import kotlinx.coroutines.launch
 
@@ -21,16 +21,15 @@ class MainActivityViewModel : ViewModel(), SocketService.SocketListener {
 
     val onlineUsersManager = OnlineUsersManager()
     val contactRequestManager = ContactRequestManager()
+    val conversationsManager = ConversationsManager()
     val contactsManager = ContactsManager()
-    val conversationManager = ConversationManager()
 
     val isConnected = MutableLiveData<Boolean>(false)
     val error = MutableLiveData<String?>()
 
     init {
         viewModelScope.launch {
-            contactsManager.load()
-            conversationManager.load()
+            conversationsManager.load()
             socketService.connect()
         }
     }
@@ -38,10 +37,6 @@ class MainActivityViewModel : ViewModel(), SocketService.SocketListener {
     override fun onCleared() {
         super.onCleared()
         socketService.disconnect()
-    }
-
-    fun onContactRequestsViewed() {
-        contactRequestManager.markAllRead()
     }
 
     // --- emissions ---
@@ -61,7 +56,7 @@ class MainActivityViewModel : ViewModel(), SocketService.SocketListener {
         viewModelScope.launch {
             val contact = ContactRepository.getContactByUsername(toUsername) ?: return@launch
             val timestamp = System.currentTimeMillis()
-            conversationManager.saveOutgoing(timestamp, toUsername, content)
+            conversationsManager.cacheOutgoing(timestamp, toUsername, content)
             val encrypted = CryptoUtils.encrypt(content, contact.pubKey)
             socketService.sendMessage(timestamp, toUsername, encrypted)
         }
@@ -93,12 +88,13 @@ class MainActivityViewModel : ViewModel(), SocketService.SocketListener {
     }
 
     // --- targeted callbacks ---
+
     override fun onMessageReceived(fromUsername: String, content: String) {
         viewModelScope.launch {
             val isContact = ContactRepository.getContactByUsername(fromUsername) != null
             if (!isContact) return@launch
             val cleartext = CryptoUtils.decrypt(content, SessionRepository.session.privateKey)
-            conversationManager.saveIncoming(fromUsername, cleartext)
+            conversationsManager.saveIncoming(fromUsername, cleartext)
         }
     }
 
@@ -111,7 +107,10 @@ class MainActivityViewModel : ViewModel(), SocketService.SocketListener {
     override fun onContactAcceptReceived(fromUsername: String, fromPubKey: String) {
         val pending = contactRequestManager.get(fromUsername)
         if (pending != null) contactRequestManager.remove(pending)
-        viewModelScope.launch { contactsManager.addContact(fromUsername, fromPubKey) }
+        viewModelScope.launch {
+            contactsManager.addContact(fromUsername, fromPubKey)
+            conversationsManager.load()
+        }
     }
 
     // --- success callbacks ---
@@ -120,12 +119,15 @@ class MainActivityViewModel : ViewModel(), SocketService.SocketListener {
 
     override fun onContactAcceptSuccess(toUsername: String) {
         val request = contactRequestManager.get(toUsername) ?: return
-        viewModelScope.launch { contactsManager.addContact(toUsername, request.pubKey) }
+        viewModelScope.launch {
+            contactsManager.addContact(toUsername, request.pubKey)
+            conversationsManager.load()
+        }
         contactRequestManager.remove(request)
     }
 
     override fun onMessageSuccess(timestamp: Long, toUsername: String, content: String) {
-        viewModelScope.launch { conversationManager.flushOutgoing(timestamp) }
+        viewModelScope.launch { conversationsManager.flushOutgoing(timestamp) }
     }
 
     // --- failure callbacks ---
@@ -139,7 +141,7 @@ class MainActivityViewModel : ViewModel(), SocketService.SocketListener {
     }
 
     override fun onMessageFailure(timestamp: Long, toUsername: String, reason: String) {
-        conversationManager.removeOutgoing(timestamp)
+        conversationsManager.removeOutgoing(timestamp)
         error.postValue(reason)
     }
 }

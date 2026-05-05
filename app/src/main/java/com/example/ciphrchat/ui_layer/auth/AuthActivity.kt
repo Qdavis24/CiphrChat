@@ -32,9 +32,7 @@ class AuthActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             var user: User? = null
-            withContext(Dispatchers.IO) {
-                user = UserRepository.getUser()
-            }
+            user = UserRepository.getUser()
             navController.navigate(decideCorrectStartFrag(user))
         }
 

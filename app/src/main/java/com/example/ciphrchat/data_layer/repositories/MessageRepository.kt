@@ -13,13 +13,17 @@ object MessageRepository {
     }
 
     suspend fun saveMessage(
-        content: String, senderUsername: String, contactUsername: String, sentAt: Long
+        content: String, senderUsername: String, contactUsername: String, sentAt: Long, read: Boolean
     ): Boolean = withContext(Dispatchers.IO) {
         db.insertMessage(
-            content, senderUsername, contactUsername, sentAt
+            content, senderUsername, contactUsername, sentAt, read
         )
     }
 
-    suspend fun getMessagesByContactUsername(contactUsername: String): List<Message> =
+    suspend fun getMessagesByContactUsername(contactUsername: String): ArrayList<Message> =
         withContext(Dispatchers.IO) { db.getMessagesByContactUsername(contactUsername) }
+
+    suspend fun markReadByContactUsername(contactUsername: String) {
+        withContext(Dispatchers.IO) { db.markMessagesReadByContactUsername(contactUsername) }
+    }
 }

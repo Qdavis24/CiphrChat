@@ -1,4 +1,4 @@
-package com.example.ciphrchat.ui_layer.main.online_users
+package com.example.ciphrchat.ui_layer.main.managers
 
 import androidx.lifecycle.MutableLiveData
 import com.example.ciphrchat.data_layer.models.OnlineUser

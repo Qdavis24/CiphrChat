@@ -3,20 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/contactsFragment"
+        android:id="@+id/conversationsFragment"
         android:icon="@drawable/group"
-        android:title="Contacts"
-        app:showAsAction="always"/>
+        android:title="@string/conversations"
+        app:showAsAction="ifRoom|always"/>
 
     <item
         android:id="@+id/onlineUsersFragment"
         android:icon="@drawable/find_person"
-        android:title="Online Users"
-        app:showAsAction="always"/>
+        android:title="@string/online_users"
+        app:showAsAction="ifRoom|always"/>
 
     <item
         android:id="@+id/contactRequestsFragment"
         android:icon="@drawable/notification_icon"
-        android:title="Notifications"
-        app:showAsAction="always"/>
+        android:title="@string/notifications"
+        app:showAsAction="ifRoom|always"/>
 </menu>

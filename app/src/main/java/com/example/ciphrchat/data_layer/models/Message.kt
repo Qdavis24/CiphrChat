@@ -5,5 +5,6 @@ class Message(
     val content: String,
     val senderUsername: String,
     val contactUsername: String,
-    val sentAt: Long
+    val sentAt: Long,
+    var read: Boolean = false
 )

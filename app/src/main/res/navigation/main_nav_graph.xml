@@ -3,15 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_nav_graph"
-    app:startDestination="@id/contactsFragment">
+    app:startDestination="@id/conversationsFragment">
 
     <fragment
-        android:id="@+id/contactsFragment"
-        android:name="com.example.ciphrchat.ui_layer.main.contacts.ContactsFragment"
+        android:id="@+id/conversationsFragment"
+        android:name="com.example.ciphrchat.ui_layer.main.conversations.ConversationsFragment"
         android:label="fragment_chat"
-        tools:layout="@layout/fragment_contacts">
+        tools:layout="@layout/fragment_conversations">
         <action
-            android:id="@+id/action_contactsFragment_to_conversationFragment"
+            android:id="@+id/action_conversationsFragment_to_conversationFragment"
             app:destination="@id/conversationFragment" />
     </fragment>
     <fragment

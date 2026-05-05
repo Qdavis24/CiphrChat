@@ -60,8 +60,20 @@ class MainActivity : AppCompatActivity() {
             msg?.let { Toast.makeText(this, it, Toast.LENGTH_SHORT).show() }
         }
 
-        viewModel.contactRequestManager.unreadCount.observe(this) { count ->
+        viewModel.contactRequestManager.contactRequests.observe(this) { value ->
             val badge = bottomNav.getOrCreateBadge(R.id.contactRequestsFragment)
+            val count = value.count()
+            if (count == 0) {
+                badge.isVisible = false
+            } else {
+                badge.isVisible = true
+                badge.number = count
+            }
+        }
+
+        viewModel.conversationsManager.conversations.observe(this) { value ->
+            val badge = bottomNav.getOrCreateBadge(R.id.conversationsFragment)
+            val count = value.sumOf { convo -> convo.messages.count { !it.read } }
             if (count == 0) {
                 badge.isVisible = false
             } else {

@@ -1,27 +1,36 @@
-package com.example.ciphrchat.ui_layer.main.conversation
+package com.example.ciphrchat.ui_layer.main.managers
 
 import androidx.lifecycle.MutableLiveData
+import com.example.ciphrchat.data_layer.models.Conversation
 import com.example.ciphrchat.data_layer.models.Message
 import com.example.ciphrchat.data_layer.repositories.ContactRepository
 import com.example.ciphrchat.data_layer.repositories.MessageRepository
 import com.example.ciphrchat.data_layer.repositories.SessionRepository
+import kotlinx.coroutines.withContext
+import kotlin.collections.forEach
 
-class ConversationManager {
-    val messages = MutableLiveData<Map<String, List<Message>>>(emptyMap())
+class ConversationsManager {
+    val conversations = MutableLiveData<List<Conversation>>(emptyList())
 
     val outgoingMessages = hashMapOf<Long, Message>()
 
+    var activeConversation: String? = null
 
     suspend fun load() {
-        val loaded = hashMapOf<String, List<Message>>()
-        for (contact in ContactRepository.getContacts()) {
-            loaded[contact.username] =
-                MessageRepository.getMessagesByContactUsername(contact.username)
+        val current = arrayListOf<Conversation>()
+        val contacts = ContactRepository.getContacts()
+        contacts.forEach {
+            current.add(
+                Conversation(
+                    contact = it,
+                    MessageRepository.getMessagesByContactUsername(it.username)
+                )
+            )
         }
-        messages.value = loaded
+        conversations.value = current
     }
 
-    fun saveOutgoing(timestamp: Long, toUsername: String, content: String) {
+    fun cacheOutgoing(timestamp: Long, toUsername: String, content: String) {
         outgoingMessages[timestamp] = Message(
             content = content,
             senderUsername = SessionRepository.session.username,
@@ -33,7 +42,7 @@ class ConversationManager {
     suspend fun flushOutgoing(timestamp: Long) {
         val msg = outgoingMessages[timestamp] ?: return
         MessageRepository.saveMessage(
-            msg.content, msg.senderUsername, msg.contactUsername, msg.sentAt
+            msg.content, msg.senderUsername, msg.contactUsername, msg.sentAt, true
         )
         load()
     }
@@ -47,8 +56,15 @@ class ConversationManager {
             content = content,
             senderUsername = senderUsername,
             contactUsername = senderUsername,
-            sentAt = System.currentTimeMillis()
+            sentAt = System.currentTimeMillis(),
+            read = activeConversation?.equals(senderUsername) ?: false
         )
         load()
     }
+
+    suspend fun markMessagesRead(contactUsername: String){
+        MessageRepository.markReadByContactUsername(contactUsername)
+        load()
+    }
+
 }

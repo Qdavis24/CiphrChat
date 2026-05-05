@@ -44,6 +44,7 @@ class LocalDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME,
                 content TEXT NOT NULL,
                 sender_username TEXT NOT NULL,
                 sent_at INTEGER NOT NULL,
+                read INTEGER NOT NULL,
                 contact_username TEXT NOT NULL REFERENCES contact(username)
             )
         """.trimIndent()
@@ -141,7 +142,11 @@ class LocalDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME,
     // --- messages ---
 
     fun insertMessage(
-        content: String, senderUsername: String, contactUsername: String, sentAt: Long
+        content: String,
+        senderUsername: String,
+        contactUsername: String,
+        sentAt: Long,
+        read: Boolean
     ): Boolean {
         return try {
             val cv = ContentValues().apply {
@@ -149,6 +154,7 @@ class LocalDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME,
                 put("sender_username", senderUsername)
                 put("contact_username", contactUsername)
                 put("sent_at", sentAt)
+                put("read", if (read) 1 else 0)
             }
             writableDatabase.insert("message", null, cv)
             true
@@ -158,7 +164,7 @@ class LocalDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME,
         }
     }
 
-    fun getMessagesByContactUsername(contactUsername: String): List<Message> {
+    fun getMessagesByContactUsername(contactUsername: String): ArrayList<Message> {
         val cursor = readableDatabase.query(
             "message",
             null,
@@ -176,11 +182,23 @@ class LocalDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME,
                         content = it.getString(it.getColumnIndexOrThrow("content")),
                         senderUsername = it.getString(it.getColumnIndexOrThrow("sender_username")),
                         contactUsername = it.getString(it.getColumnIndexOrThrow("contact_username")),
-                        sentAt = it.getLong(it.getColumnIndexOrThrow("sent_at"))
+                        sentAt = it.getLong(it.getColumnIndexOrThrow("sent_at")),
+                        read = it.getInt(it.getColumnIndexOrThrow("read")) == 1
                     )
                 )
             }
             results
+        }
+    }
+
+    fun markMessagesReadByContactUsername(contactUsername: String): Boolean {
+        return try {
+            val cv = ContentValues().apply { put("read", 1) }
+            writableDatabase.update("message", cv, "contact_username = ?", arrayOf(contactUsername))
+            true
+        } catch (e: SQLiteConstraintException) {
+            Log.d("ERROR", "LocalDatabaseHelper::markMessagesReadByContactUsername ${e.message}")
+            false
         }
     }
 }
